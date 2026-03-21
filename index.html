@@ -85,8 +85,8 @@ h1{font-size:3.5rem;margin:0;text-shadow:0 0 25px #38bdf8}
 </header>
 
 <div class="stats">
-<div class="box" id="subs">Subs: ...</div>
-<div class="box" id="views">Views: ...</div>
+<div class="box" id="subs">🔥 Subs: 0</div>
+<div class="box" id="views">👁️ Views: 0</div>
 </div>
 
 <a class="btn" href="https://www.youtube.com/@Annielito_YT" target="_blank">
@@ -111,7 +111,8 @@ function animateNumber(element, start, end){
   if(!startTime) startTime=timestamp;
   const progress=Math.min((timestamp-startTime)/duration,1);
   const value=Math.floor(progress*(end-start)+start);
-  element.innerText=value.toLocaleString();
+  const label = element.id === 'subs' ? '🔥 Subs: ' : '👁️ Views: ';
+  element.innerText = label + value.toLocaleString();
   if(progress<1) requestAnimationFrame(step);
  }
  requestAnimationFrame(step);
