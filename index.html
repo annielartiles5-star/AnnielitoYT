@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Annielito_YT</title>
+
+<style>
+body{margin:0;font-family:Segoe UI,sans-serif;background:radial-gradient(circle,#0f172a,#020617);color:white;text-align:center}
+header{padding:40px;background:linear-gradient(90deg,#020617,#1e293b);box-shadow:0 0 30px rgba(0,0,0,0.8)}
+h1{font-size:3rem;margin:0;text-shadow:0 0 20px #38bdf8}
+
+.stats{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin:30px}
+.box{background:rgba(30,41,59,0.6);padding:20px 30px;border-radius:15px;font-size:1.3rem;box-shadow:0 0 20px rgba(0,0,0,0.6);transition:0.3s}
+
+.up{box-shadow:0 0 25px lime;transform:scale(1.1)}
+.down{box-shadow:0 0 25px red;transform:scale(1.1)}
+
+.btn{
+  display:inline-block;
+  margin-top:10px;
+  padding:15px 30px;
+  border-radius:15px;
+  background:linear-gradient(270deg, red, green, blue, yellow, red);
+  background-size:800% 800%;
+  color:white;
+  text-decoration:none;
+  font-weight:bold;
+  box-shadow:0 0 20px rgba(255,0,0,0.8);
+  transition:transform 0.3s;
+}
+
+@keyframes rgbFlow{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+.btn:hover{
+  animation:rgbFlow 6s linear infinite;
+  transform:scale(1.15);
+  animation:colorShift 3s linear infinite;
+}
+
+@keyframes colorShift{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+h2{margin-top:50px;font-size:2rem}
+
+.videos{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:25px;padding:20px}
+.video-card{background:rgba(30,41,59,0.6);border-radius:15px;overflow:hidden;box-shadow:0 0 20px rgba(0,0,0,0.6);transition:0.3s}
+.video-card:hover{transform:scale(1.05)}
+.video-card img{width:100%}
+.video-card p{padding:10px;font-size:0.9rem}
+
+#moreBtn{margin:20px;cursor:pointer;font-size:1.3rem;color:#38bdf8}
+
+.particles{position:fixed;width:100%;height:100%;top:0;left:0;pointer-events:none}
+.particle{position:absolute;width:4px;height:4px;background:#38bdf8;border-radius:50%;animation:float linear infinite}
+@keyframes float{from{transform:translateY(100vh);opacity:1}to{transform:translateY(-10vh);opacity:0}}
+</style>
+</head>
+<body>
+
+<audio id="upSound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+<audio id="downSound" src="https://assets.mixkit.co/active_storage/sfx/2572/2572-preview.mp3"></audio>
+
+<div class="particles" id="particles"></div>
+
+<header>
+<h1>🎮 Annielito_YT</h1>
+</header>
+
+<div class="stats">
+<div class="box" id="subs">Subs: ...</div>
+<div class="box" id="views">Views: ...</div>
+</div>
+
+<a class="btn" href="https://www.youtube.com/@Annielito_YT" target="_blank">🚀 Ver canal</a>
+
+<h2>🔥 Últimos Videos</h2>
+<div class="videos" id="videoContainer"></div>
+<div id="moreBtn">➡️ Más videos</div>
+
+<script>
+const API_KEY="AIzaSyCeCF4PPbkrouoDfvXNRYpxZHMNpapmUAU";
+const CHANNEL_ID="UC0e15l_V3A4H_L9rexHwvhw";
+
+let allVideos=[];
+let showingAll=false;
+let lastSubs=null;
+
+async function getData(){
+ try{
+  const res=await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${CHANNEL_ID}&key=${API_KEY}`);
+  const data=await res.json();
+  const stats=data.items[0].statistics;
+
+  const subs=Number(stats.subscriberCount);
+  const subsEl=document.getElementById("subs");
+
+  if(lastSubs!==null){
+    if(subs>lastSubs){
+      subsEl.classList.add("up");
+      document.getElementById("upSound").play();
+    } else if(subs<lastSubs){
+      subsEl.classList.add("down");
+      document.getElementById("downSound").play();
+    }
+
+    setTimeout(()=>{
+      subsEl.classList.remove("up","down");
+    },1500);
+  }
+
+  lastSubs=subs;
+
+  subsEl.innerText="🔥 Subs: "+subs.toLocaleString();
+  document.getElementById("views").innerText="👁️ Views: "+Number(stats.viewCount).toLocaleString();
+
+  const vres=await fetch(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=12`);
+  const vdata=await vres.json();
+
+  allVideos=vdata.items.filter(v=>v.id.videoId);
+  showVideos();
+
+ }catch(e){
+  document.getElementById("subs").innerText="Error 😢";
+ }
+}
+
+function showVideos(){
+ const container=document.getElementById("videoContainer");
+ container.innerHTML="";
+ const vids=showingAll?allVideos:allVideos.slice(0,3);
+
+ vids.forEach(v=>{
+  const card=document.createElement("div");
+  card.className="video-card";
+  card.innerHTML=`
+   <a href="https://www.youtube.com/watch?v=${v.id.videoId}" target="_blank">
+    <img src="${v.snippet.thumbnails.medium.url}">
+   </a>
+   <p>${v.snippet.title}</p>
+  `;
+  container.appendChild(card);
+ });
+}
+
+document.getElementById("moreBtn").onclick=()=>{
+ showingAll=!showingAll;
+ document.getElementById("moreBtn").innerText=showingAll?"⬅️ Menos videos":"➡️ Más videos";
+ showVideos();
+};
+
+setInterval(getData,15000);
+getData();
+
+const pc=document.getElementById("particles");
+for(let i=0;i<60;i++){
+ const p=document.createElement("div");
+ p.className="particle";
+ p.style.left=Math.random()*100+"vw";
+ p.style.animationDuration=(5+Math.random()*10)+"s";
+ pc.appendChild(p);
+}
+
+</script>
+
+<div style="position:fixed;bottom:10px;right:15px;font-size:0.8rem;opacity:0.6;">
+Made by Annielito Studios
+</div>
+
+</body>
+</html>
