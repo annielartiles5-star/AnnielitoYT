@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Annielito_YT</title>
+
+<style>
+body{margin:0;font-family:Segoe UI,sans-serif;background:radial-gradient(circle,#0f172a,#020617);color:white;text-align:center}
+header{padding:40px;background:linear-gradient(90deg,#020617,#1e293b)}
+h1{font-size:3rem;margin:0;text-shadow:0 0 20px #38bdf8}
+
+.stats{display:flex;justify-content:center;gap:20px;margin:30px;flex-wrap:wrap}
+.box{background:rgba(30,41,59,0.6);padding:20px;border-radius:15px}
+
+.up{box-shadow:0 0 20px lime}
+.down{box-shadow:0 0 20px red}
+
+.btn{
+  display:inline-block;
+  padding:15px 30px;
+  border-radius:15px;
+  background:linear-gradient(270deg, red, green, blue, yellow, red);
+  background-size:800% 800%;
+  color:white;
+  text-decoration:none;
+}
+
+.btn:hover{
+  animation:rgbFlow 6s linear infinite;
+}
+
+@keyframes rgbFlow{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+.videos{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;padding:20px}
+
+.video-card{background:rgba(30,41,59,0.6);border-radius:15px;overflow:hidden}
+.video-card img{width:100%}
+
+#moreBtn{cursor:pointer;color:#38bdf8;margin:20px}
+</style>
+</head>
+
+<body>
+
+<audio id="upSound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+<audio id="downSound" src="https://assets.mixkit.co/active_storage/sfx/2572/2572-preview.mp3"></audio>
+
+<header>
+<h1>🎮 Annielito_YT</h1>
+</header>
+
+<div class="stats">
+<div class="box" id="subs">Subs: ...</div>
+<div class="box" id="views">Views: ...</div>
+</div>
+
+<a class="btn" href="https://www.youtube.com/@Annielito_YT" target="_blank">
+🚀 Ir al canal
+</a>
+
+<h2>🔥 Videos</h2>
+<div class="videos" id="videoContainer"></div>
+<div id="moreBtn">➡️ Más videos</div>
+
+<div style="position:fixed;bottom:10px;right:10px;font-size:0.8rem;opacity:0.6">
+Made by Annielito Studios
+</div>
+
+<script>
+const API_KEY="AIzaSyBm0gNG2BshwYlz5aSSdSDtNKisQh6hHjk";
+const CHANNEL_ID="UC0e15l_V3A4H_L9rexHwvhw";
+
+let lastSubs=null;
+let allVideos=[];
+let showingAll=false;
+
+// 🔴 SOLO SUBS (1 unidad)
+async function getData(){
+ try{
+  const res=await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${CHANNEL_ID}&key=${API_KEY}`);
+  const data=await res.json();
+
+  const stats=data.items[0].statistics;
+  const subs=Number(stats.subscriberCount);
+  const subsEl=document.getElementById("subs");
+
+  if(lastSubs!==null){
+    if(subs>lastSubs){
+      subsEl.classList.add("up");
+      document.getElementById("upSound").play();
+    } else if(subs<lastSubs){
+      subsEl.classList.add("down");
+      document.getElementById("downSound").play();
+    }
+
+    setTimeout(()=>{
+      subsEl.classList.remove("up","down");
+    },1500);
+  }
+
+  lastSubs=subs;
+
+  subsEl.innerText="🔥 Subs: "+subs.toLocaleString();
+  document.getElementById("views").innerText="👁️ Views: "+Number(stats.viewCount).toLocaleString();
+
+ }catch(e){
+  document.getElementById("subs").innerText="Error 😢";
+ }
+}
+
+// 🎥 SOLO UNA VEZ (100 unidades)
+async function loadVideos(){
+ try{
+  const res=await fetch(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=12`);
+  const data=await res.json();
+
+  allVideos=data.items.filter(v=>v.id.videoId);
+  showVideos();
+
+ }catch(e){
+  console.log("error videos");
+ }
+}
+
+function showVideos(){
+ const container=document.getElementById("videoContainer");
+ container.innerHTML="";
+
+ const vids=showingAll?allVideos:allVideos.slice(0,3);
+
+ vids.forEach(v=>{
+  const card=document.createElement("div");
+  card.className="video-card";
+
+  card.innerHTML=`
+   <a href="https://www.youtube.com/watch?v=${v.id.videoId}" target="_blank">
+    <img src="${v.snippet.thumbnails.medium.url}">
+   </a>
+   <p>${v.snippet.title}</p>
+  `;
+
+  container.appendChild(card);
+ });
+}
+
+document.getElementById("moreBtn").onclick=()=>{
+ showingAll=!showingAll;
+ document.getElementById("moreBtn").innerText=showingAll?"⬅️ Menos videos":"➡️ Más videos";
+ showVideos();
+};
+
+// 🚀 INICIO CORRECTO
+loadVideos();       // SOLO 1 VEZ
+getData();          // primera carga
+setInterval(getData,15000); // SOLO subs
+
+</script>
+
+</body>
+</html>
