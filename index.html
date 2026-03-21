@@ -65,7 +65,7 @@ h1{font-size:3rem;margin:0;text-shadow:0 0 20px #38bdf8}
 
 <h2>🔥 Videos</h2>
 <div class="videos" id="videoContainer"></div>
-<div id="moreBtn">➡️ Más videos</div>
+<div id="moreBtn"> Más videos</div>
 
 <div style="position:fixed;bottom:10px;right:10px;font-size:0.8rem;opacity:0.6">
 Made by Annielito Studios
@@ -100,7 +100,7 @@ async function getData(){
 
     setTimeout(()=>{
       subsEl.classList.remove("up","down");
-    },15000);
+    },20000);
   }
 
   lastSubs=subs;
@@ -150,7 +150,7 @@ function showVideos(){
 
 document.getElementById("moreBtn").onclick=()=>{
  showingAll=!showingAll;
- document.getElementById("moreBtn").innerText=showingAll?"⬅️ Menos videos":"➡️ Más videos";
+ document.getElementById("moreBtn").innerText=showingAll?" Menos videos":" Más videos";
  showVideos();
 };
 
