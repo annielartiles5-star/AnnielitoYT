@@ -19,7 +19,6 @@ h1{font-size:3.5rem;margin:0;text-shadow:0 0 25px #38bdf8}
   box-shadow:0 0 25px rgba(0,0,0,0.7);
   transition:0.3s;
 }
-
 .up{box-shadow:0 0 30px lime;transform:scale(1.1)}
 .down{box-shadow:0 0 30px red;transform:scale(1.1)}
 
@@ -37,41 +36,52 @@ h1{font-size:3.5rem;margin:0;text-shadow:0 0 25px #38bdf8}
   box-shadow:0 0 30px rgba(255,0,0,0.9);
   transition:transform 0.3s;
 }
+.btn:hover{transform:scale(1.15);animation:rgbFlow 6s linear infinite;}
+@keyframes rgbFlow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.footer{position:fixed;bottom:10px;right:15px;font-size:0.8rem;opacity:0.6}
+.particle{position:absolute;width:4px;height:4px;background:white;border-radius:50%;opacity:0.7;animation:float linear infinite}
+@keyframes float{from{transform:translateY(100vh)}to{transform:translateY(-10vh)}}
 
-.btn:hover{
-  transform:scale(1.15);
-  animation:rgbFlow 6s linear infinite;
-}
-
-@keyframes rgbFlow{
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
-}
-
-.footer{
+/* Sugerencias */
+#suggestionBtn{
   position:fixed;
-  bottom:10px;
-  right:15px;
-  font-size:0.8rem;
-  opacity:0.6;
+  top:20px;
+  right:20px;
+  background:rgba(30,41,59,0.8);
+  padding:15px 25px;
+  border-radius:15px;
+  cursor:pointer;
+  font-weight:bold;
+  box-shadow:0 0 15px #38bdf8;
+  transition:0.3s;
+  z-index:1000;
 }
-
-/* partículas */
-.particle{
-  position:absolute;
-  width:4px;
-  height:4px;
-  background:white;
-  border-radius:50%;
-  opacity:0.7;
-  animation:float linear infinite;
+#suggestionBtn:hover{transform:scale(1.1);}
+#suggestionBox{
+  display:none;
+  position:fixed;
+  top:70px;
+  right:20px;
+  background:rgba(30,41,59,0.9);
+  padding:20px;
+  border-radius:15px;
+  width:250px;
+  text-align:center;
+  box-shadow:0 0 20px #38bdf8;
+  z-index:1000;
 }
-
-@keyframes float{
-  from{transform:translateY(100vh)}
-  to{transform:translateY(-10vh)}
+#suggestionBox a{
+  display:inline-block;
+  margin-top:10px;
+  padding:10px 20px;
+  border-radius:10px;
+  background:linear-gradient(270deg, red, green, blue, yellow, red);
+  background-size:800% 800%;
+  color:white;
+  text-decoration:none;
+  font-weight:bold;
 }
+#suggestionBox a:hover{animation:rgbFlow 6s linear infinite;}
 </style>
 </head>
 
@@ -89,9 +99,13 @@ h1{font-size:3.5rem;margin:0;text-shadow:0 0 25px #38bdf8}
 <div class="box" id="views">👁️ Views: 0</div>
 </div>
 
-<a class="btn" href="https://www.youtube.com/@Annielito_YT" target="_blank">
-🚀 IR AL CANAL
-</a>
+<a class="btn" href="https://www.youtube.com/@Annielito_YT" target="_blank">🚀 IR AL CANAL</a>
+
+<div id="suggestionBtn">💡 Sugerencias</div>
+<div id="suggestionBox">
+  <p>Creá una sugerencia para ayudar el contenido de Annielito_YT</p>
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLSe81blPyVAwm-_V4pNuWB24sZ_Y6HoDq0HwQrulw/viewform?usp=publish-editor" target="_blank">Crear nueva sugerencia</a>
+</div>
 
 <div class="footer">Made by Annielito Studios</div>
 
@@ -106,7 +120,6 @@ let currentViews=0;
 function animateNumber(element, start, end){
  let startTime=null;
  const duration=1000;
-
  function step(timestamp){
   if(!startTime) startTime=timestamp;
   const progress=Math.min((timestamp-startTime)/duration,1);
@@ -122,36 +135,24 @@ async function getData(){
  try{
   const res=await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${CHANNEL_ID}&key=${API_KEY}`);
   const data=await res.json();
-
   const stats=data.items[0].statistics;
   const subs=Number(stats.subscriberCount);
   const views=Number(stats.viewCount);
-
   const subsEl=document.getElementById("subs");
   const viewsEl=document.getElementById("views");
 
   if(lastSubs!==null){
-    if(subs>lastSubs){
-      subsEl.classList.add("up");
-      document.getElementById("upSound").play();
-    } else if(subs<lastSubs){
-      subsEl.classList.add("down");
-      document.getElementById("downSound").play();
-    }
-
+    if(subs>lastSubs){ subsEl.classList.add("up"); document.getElementById("upSound").play(); }
+    else if(subs<lastSubs){ subsEl.classList.add("down"); document.getElementById("downSound").play(); }
     setTimeout(()=>subsEl.classList.remove("up","down"),1500);
   }
 
   animateNumber(subsEl,currentSubs,subs);
   animateNumber(viewsEl,currentViews,views);
-
   currentSubs=subs;
   currentViews=views;
   lastSubs=subs;
-
- }catch(e){
-  document.getElementById("subs").innerText="Error 😢";
- }
+ }catch(e){ document.getElementById("subs").innerText="Error 😢"; }
 }
 
 // partículas
@@ -164,8 +165,14 @@ for(let i=0;i<80;i++){
 }
 
 getData();
-setInterval(getData,20000);
+setInterval(getData,15000);
 
+// Sugerencias
+const suggestionBtn=document.getElementById('suggestionBtn');
+const suggestionBox=document.getElementById('suggestionBox');
+suggestionBtn.onclick=()=>{
+  suggestionBox.style.display = suggestionBox.style.display === 'block' ? 'none' : 'block';
+};
 </script>
 
 </body>
