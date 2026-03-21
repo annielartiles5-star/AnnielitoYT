@@ -6,7 +6,7 @@
 <title>Annielito_YT</title>
 
 <style>
-body{margin:0;font-family:Segoe UI,sans-serif;background:radial-gradient(circle,#0f172a,#020617);color:white;text-align:center}
+body{margin:0;font-family:Segoe UI,sans-serif;background:radial-gradient(circle,#0f172a,#020617);color:white;text-align:center;overflow:hidden}
 header{padding:40px;background:linear-gradient(90deg,#020617,#1e293b)}
 h1{font-size:3.5rem;margin:0;text-shadow:0 0 25px #38bdf8}
 
@@ -15,7 +15,7 @@ h1{font-size:3.5rem;margin:0;text-shadow:0 0 25px #38bdf8}
   background:rgba(30,41,59,0.7);
   padding:40px 60px;
   border-radius:20px;
-  font-size:2rem;
+  font-size:2.5rem;
   box-shadow:0 0 25px rgba(0,0,0,0.7);
   transition:0.3s;
 }
@@ -56,6 +56,22 @@ h1{font-size:3.5rem;margin:0;text-shadow:0 0 25px #38bdf8}
   font-size:0.8rem;
   opacity:0.6;
 }
+
+/* partículas */
+.particle{
+  position:absolute;
+  width:4px;
+  height:4px;
+  background:white;
+  border-radius:50%;
+  opacity:0.7;
+  animation:float linear infinite;
+}
+
+@keyframes float{
+  from{transform:translateY(100vh)}
+  to{transform:translateY(-10vh)}
+}
 </style>
 </head>
 
@@ -84,6 +100,22 @@ const API_KEY="AIzaSyBm0gNG2BshwYlz5aSSdSDtNKisQh6hHjk";
 const CHANNEL_ID="UC0e15l_V3A4H_L9rexHwvhw";
 
 let lastSubs=null;
+let currentSubs=0;
+let currentViews=0;
+
+function animateNumber(element, start, end){
+ let startTime=null;
+ const duration=1000;
+
+ function step(timestamp){
+  if(!startTime) startTime=timestamp;
+  const progress=Math.min((timestamp-startTime)/duration,1);
+  const value=Math.floor(progress*(end-start)+start);
+  element.innerText=value.toLocaleString();
+  if(progress<1) requestAnimationFrame(step);
+ }
+ requestAnimationFrame(step);
+}
 
 async function getData(){
  try{
@@ -92,7 +124,10 @@ async function getData(){
 
   const stats=data.items[0].statistics;
   const subs=Number(stats.subscriberCount);
+  const views=Number(stats.viewCount);
+
   const subsEl=document.getElementById("subs");
+  const viewsEl=document.getElementById("views");
 
   if(lastSubs!==null){
     if(subs>lastSubs){
@@ -103,19 +138,28 @@ async function getData(){
       document.getElementById("downSound").play();
     }
 
-    setTimeout(()=>{
-      subsEl.classList.remove("up","down");
-    },1500);
+    setTimeout(()=>subsEl.classList.remove("up","down"),1500);
   }
 
-  lastSubs=subs;
+  animateNumber(subsEl,currentSubs,subs);
+  animateNumber(viewsEl,currentViews,views);
 
-  subsEl.innerText="🔥 Subs: "+subs.toLocaleString();
-  document.getElementById("views").innerText="👁️ Views: "+Number(stats.viewCount).toLocaleString();
+  currentSubs=subs;
+  currentViews=views;
+  lastSubs=subs;
 
  }catch(e){
   document.getElementById("subs").innerText="Error 😢";
  }
+}
+
+// partículas
+for(let i=0;i<80;i++){
+ const p=document.createElement("div");
+ p.className="particle";
+ p.style.left=Math.random()*100+"vw";
+ p.style.animationDuration=(5+Math.random()*10)+"s";
+ document.body.appendChild(p);
 }
 
 getData();
