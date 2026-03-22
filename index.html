@@ -46,7 +46,16 @@ h1{font-size:3.5rem;margin:0;text-shadow:0 0 25px #38bdf8}
   z-index:1000;
 }
 #donateBox button,#thankYouScreen button{margin-top:10px;padding:10px 20px;border-radius:10px;font-weight:bold;cursor:pointer;}
-#donateBox input{width:100%;padding:10px;border-radius:10px;margin-top:10px;text-align:center;font-weight:bold;font-size:1rem;}
+#donateBox input{
+  width:80%;
+  padding:12px;
+  border-radius:10px;
+  margin:15px auto;
+  display:block;
+  text-align:center;
+  font-weight:bold;
+  font-size:1.1rem;
+}
 </style>
 </head>
 
@@ -70,7 +79,7 @@ h1{font-size:3.5rem;margin:0;text-shadow:0 0 25px #38bdf8}
 <div id="suggestionBtn">💡 Sugerencias</div>
 <div id="suggestionBox">
   <p>Creá una sugerencia para ayudar el contenido de Annielito_YT</p>
-  <a href="https://forms.gle/DZMGPcj3UYN3M8qo7" target="_blank">Crear nueva sugerencia</a>
+  <a href="https://forms.gle/n3x94yRNJkfzQKXA9" target="_blank">Crear nueva sugerencia</a>
 </div>
 
 <!-- Donar -->
@@ -158,37 +167,9 @@ const doneDonate=document.getElementById('doneDonate');
 donateBtn.onclick=()=>{ donateBox.style.display = donateBox.style.display==='block'?'none':'block'; };
 copyPix.onclick=()=>{ navigator.clipboard.writeText(document.getElementById('pixCode').value); alert('Código PIX copiado!'); };
 doneDonate.onclick=()=>{ donateBox.style.display='none'; thankYou.style.display='block'; };
-// 🎉 confeti
-function launchConfetti(){
- for(let i=0;i<120;i++){
-  const c=document.createElement('div');
-  c.style.position='fixed';
-  c.style.width='6px';
-  c.style.height='6px';
-  c.style.background=`hsl(${Math.random()*360},100%,50%)`;
-  c.style.left=Math.random()*100+'vw';
-  c.style.top='-10px';
-  c.style.opacity=0.8;
-  c.style.zIndex=2000;
-  c.style.borderRadius='50%';
-  c.style.pointerEvents='none';
-  c.style.transition='transform 3s linear, opacity 3s';
-  document.body.appendChild(c);
-
-  setTimeout(()=>{
-    c.style.transform=`translateY(100vh) rotate(${Math.random()*360}deg)`;
-    c.style.opacity=0;
-  },10);
-
-  setTimeout(()=>c.remove(),3000);
- }
-}
-
-// modificar botón donar
 doneDonate.onclick=()=>{
  donateBox.style.display='none';
  thankYou.style.display='block';
- launchConfetti();
 };
 
 </script>
