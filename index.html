@@ -14,58 +14,39 @@ h1{font-size:3.5rem;margin:0;text-shadow:0 0 25px #38bdf8}
 .box{background:rgba(30,41,59,0.7);padding:40px 60px;border-radius:20px;font-size:2.5rem;box-shadow:0 0 25px rgba(0,0,0,0.7);transition:0.3s;}
 .up{box-shadow:0 0 30px lime;transform:scale(1.1)}
 .down{box-shadow:0 0 30px red;transform:scale(1.1)}
+
 .btn{display:inline-block;margin-top:30px;padding:25px 60px;border-radius:20px;font-size:1.5rem;background:linear-gradient(270deg, red, green, blue, yellow, red);background-size:800% 800%;color:white;text-decoration:none;font-weight:bold;box-shadow:0 0 30px rgba(255,0,0,0.9);transition:transform 0.3s;}
 .btn:hover{transform:scale(1.15);animation:rgbFlow 6s linear infinite;}
 @keyframes rgbFlow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
 .footer{position:fixed;bottom:10px;right:15px;font-size:0.8rem;opacity:0.6}
-.particle{position:absolute;width:4px;height:4px;background:white;border-radius:50%;opacity:0.7;animation:float linear infinite}
-@keyframes float{from{transform:translateY(100vh)}to{transform:translateY(-10vh)}}
+
+/* Idiomas */
+#langBtn{position:fixed;top:20px;left:20px;background:rgba(30,41,59,0.8);padding:12px 20px;border-radius:15px;cursor:pointer;font-weight:bold;box-shadow:0 0 15px #22c55e;z-index:1000}
+#langBox{display:none;position:fixed;top:60px;left:20px;background:rgba(30,41,59,0.95);padding:15px;border-radius:15px;box-shadow:0 0 20px #22c55e;z-index:1000}
+#langBox button{display:block;margin:5px 0;padding:8px 15px;border-radius:10px;cursor:pointer;font-weight:bold}
 
 /* Sugerencias */
-#suggestionBtn{position:fixed;top:20px;right:180px;background:rgba(30,41,59,0.8);padding:15px 25px;border-radius:15px;cursor:pointer;font-weight:bold;box-shadow:0 0 15px #38bdf8;transition:0.3s;z-index:1000;}
-#suggestionBtn:hover{transform:scale(1.1);}
-#suggestionBox{display:none;position:fixed;top:70px;right:180px;background:rgba(30,41,59,0.9);padding:20px;border-radius:15px;width:250px;text-align:center;box-shadow:0 0 20px #38bdf8;z-index:1000;}
-#suggestionBox a{display:inline-block;margin-top:10px;padding:10px 20px;border-radius:10px;background:linear-gradient(270deg, red, green, blue, yellow, red);background-size:800% 800%;color:white;text-decoration:none;font-weight:bold;}
-#suggestionBox a:hover{animation:rgbFlow 6s linear infinite;}
+#suggestionBtn{position:fixed;top:20px;right:180px;background:rgba(30,41,59,0.8);padding:15px 25px;border-radius:15px;cursor:pointer;font-weight:bold;box-shadow:0 0 15px #38bdf8;z-index:1000}
+#suggestionBox{display:none;position:fixed;top:70px;right:180px;background:rgba(30,41,59,0.9);padding:20px;border-radius:15px;width:250px;text-align:center;box-shadow:0 0 20px #38bdf8;z-index:1000}
 
 /* Donar */
-#donateBtn{position:fixed;top:20px;right:20px;background:rgba(30,41,59,0.8);padding:15px 25px;border-radius:15px;cursor:pointer;font-weight:bold;box-shadow:0 0 15px #facc15;transition:0.3s;z-index:1000;}
-#donateBtn:hover{transform:scale(1.1);}
-#donateBox,#thankYouScreen{
-  display:none;
-  position:fixed;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  background:rgba(30,41,59,0.95);
-  padding:25px;
-  border-radius:20px;
-  width:320px;
-  text-align:center;
-  box-shadow:0 0 25px #facc15;
-  z-index:1000;
-}
-#donateBox button,#thankYouScreen button{margin-top:10px;padding:10px 20px;border-radius:10px;font-weight:bold;cursor:pointer;}
-#donateBox input{
-  width:80%;
-  padding:12px;
-  border-radius:10px;
-  margin:15px auto;
-  display:block;
-  text-align:center;
-  font-weight:bold;
-  font-size:1.1rem;
-}
+#donateBtn{position:fixed;top:20px;right:20px;background:rgba(30,41,59,0.8);padding:15px 25px;border-radius:15px;cursor:pointer;font-weight:bold;box-shadow:0 0 15px #facc15;z-index:1000}
+#donateBox,#thankYouScreen{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(30,41,59,0.95);padding:25px;border-radius:20px;width:320px;text-align:center;box-shadow:0 0 25px #facc15;z-index:1000}
+#donateBox input{width:80%;padding:12px;border-radius:10px;margin:15px auto;display:block;text-align:center;font-weight:bold;font-size:1.1rem}
 </style>
 </head>
 
 <body>
 
-<audio id="upSound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
-<audio id="downSound" src="https://assets.mixkit.co/active_storage/sfx/2572/2572-preview.mp3"></audio>
+<div id="langBtn">🌐 IDIOMAS</div>
+<div id="langBox">
+  <button onclick="setLang('es')">🇪🇸 Español</button>
+  <button onclick="setLang('pt')">🇧🇷 Português</button>
+</div>
 
 <header>
-<h1>🎮 Annielito_YT</h1>
+<h1 id="title">🎮 Annielito_YT</h1>
 </header>
 
 <div class="stats">
@@ -73,104 +54,79 @@ h1{font-size:3.5rem;margin:0;text-shadow:0 0 25px #38bdf8}
 <div class="box" id="views">👁️ Views: 0</div>
 </div>
 
-<a class="btn" href="https://www.youtube.com/@Annielito_YT" target="_blank">🚀 IR AL CANAL</a>
+<a class="btn" id="channelBtn" href="https://www.youtube.com/@Annielito_YT" target="_blank">🚀 IR AL CANAL</a>
 
 <!-- Sugerencias -->
 <div id="suggestionBtn">💡 Sugerencias</div>
 <div id="suggestionBox">
-  <p>Creá una sugerencia para ayudar el contenido de Annielito_YT</p>
-  <a href="https://forms.gle/n3x94yRNJkfzQKXA9" target="_blank">Crear nueva sugerencia</a>
+  <p id="suggestionText">Creá una sugerencia para ayudar el contenido de Annielito_YT</p>
+  <a id="suggestionLink" href="https://forms.gle/n3x94yRNJkfzQKXA9" target="_blank">Crear nueva sugerencia</a>
 </div>
 
 <!-- Donar -->
 <div id="donateBtn">💰 Donar</div>
 <div id="donateBox">
-  <p>Apoya a Annielito_YT a mejorar su contenido con donaciones</p>
+  <p id="donateText">Apoya a Annielito_YT a mejorar su contenido con donaciones</p>
   <input type="text" value="116.045.542-23" id="pixCode" readonly>
   <button id="copyPix">Copiar código PIX</button>
   <button id="doneDonate">¡Ya doné!</button>
 </div>
 <div id="thankYouScreen">
-  <p>🙏 Gracias por tu apoyo, eres increíble!</p>
-  <button onclick="document.getElementById('thankYouScreen').style.display='none'">Cerrar</button>
+  <p id="thanksText">🙏 Gracias por tu apoyo, eres increíble!</p>
 </div>
 
 <div class="footer">Made by Annielito Studios</div>
 
 <script>
-const API_KEY="AIzaSyBm0gNG2BshwYlz5aSSdSDtNKisQh6hHjk";
-const CHANNEL_ID="UC0e15l_V3A4H_L9rexHwvhw";
-let lastSubs=null;
-let currentSubs=0;
-let currentViews=0;
-
-function animateNumber(element, start, end){
- let startTime=null;
- const duration=1000;
- function step(timestamp){
-  if(!startTime) startTime=timestamp;
-  const progress=Math.min((timestamp-startTime)/duration,1);
-  const value=Math.floor(progress*(end-start)+start);
-  const label = element.id === 'subs' ? '🔥 Subs: ' : '👁️ Views: ';
-  element.innerText = label + value.toLocaleString();
-  if(progress<1) requestAnimationFrame(step);
+// idiomas
+const texts={
+ es:{
+  channel:"🚀 IR AL CANAL",
+  suggest:"💡 Sugerencias",
+  suggestText:"Crea una sugerencia para ayudar el contenido de Annielito_YT",
+  suggestBtn:"Crear nueva sugerencia",
+  donate:"💰 Donar",
+  donateText:"Apoya a Annielito_YT a mejorar su contenido con donaciones",
+  copy:"Copiar código PIX",
+  done:"¡Ya doné!",
+  thanks:"🙏 Gracias por tu apoyo, eres increíble!"
+ },
+ pt:{
+  channel:"🚀 IR PARA O CANAL",
+  suggest:"💡 Sugestões",
+  suggestText:"Crie uma sugestão para ajudar o conteúdo de Annielito_YT",
+  suggestBtn:"Criar nova sugestão",
+  donate:"💰 Doar",
+  donateText:"Apoie Annielito_YT a melhorar seu conteúdo com doações",
+  copy:"Copiar código PIX",
+  done:"Já doei!",
+  thanks:"🙏 Obrigado pelo seu apoio!"
  }
- requestAnimationFrame(step);
-}
-
-async function getData(){
- try{
-  const res=await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${CHANNEL_ID}&key=${API_KEY}`);
-  const data=await res.json();
-  const stats=data.items[0].statistics;
-  const subs=Number(stats.subscriberCount);
-  const views=Number(stats.viewCount);
-  const subsEl=document.getElementById("subs");
-  const viewsEl=document.getElementById("views");
-  if(lastSubs!==null){
-    if(subs>lastSubs){ subsEl.classList.add("up"); document.getElementById("upSound").play(); }
-    else if(subs<lastSubs){ subsEl.classList.add("down"); document.getElementById("downSound").play(); }
-    setTimeout(()=>subsEl.classList.remove("up","down"),1500);
-  }
-  animateNumber(subsEl,currentSubs,subs);
-  animateNumber(viewsEl,currentViews,views);
-  currentSubs=subs;
-  currentViews=views;
-  lastSubs=subs;
- }catch(e){ document.getElementById("subs").innerText="Error 😢"; }
-}
-
-// partículas
-for(let i=0;i<80;i++){
- const p=document.createElement("div");
- p.className="particle";
- p.style.left=Math.random()*100+"vw";
- p.style.animationDuration=(5+Math.random()*10)+"s";
- document.body.appendChild(p);
-}
-
-getData();
-setInterval(getData,15000);
-
-// Sugerencias
-const suggestionBtn=document.getElementById('suggestionBtn');
-const suggestionBox=document.getElementById('suggestionBox');
-suggestionBtn.onclick=()=>{ suggestionBox.style.display = suggestionBox.style.display==='block'?'none':'block'; };
-
-// Donar
-const donateBtn=document.getElementById('donateBtn');
-const donateBox=document.getElementById('donateBox');
-const thankYou=document.getElementById('thankYouScreen');
-const copyPix=document.getElementById('copyPix');
-const doneDonate=document.getElementById('doneDonate');
-
-donateBtn.onclick=()=>{ donateBox.style.display = donateBox.style.display==='block'?'none':'block'; };
-copyPix.onclick=()=>{ navigator.clipboard.writeText(document.getElementById('pixCode').value); alert('Código PIX copiado!'); };
-doneDonate.onclick=()=>{ donateBox.style.display='none'; thankYou.style.display='block'; };
-doneDonate.onclick=()=>{
- donateBox.style.display='none';
- thankYou.style.display='block';
 };
+
+function setLang(lang){
+ const t=texts[lang];
+ document.getElementById("channelBtn").innerText=t.channel;
+ document.getElementById("suggestionBtn").innerText=t.suggest;
+ document.getElementById("suggestionText").innerText=t.suggestText;
+ document.getElementById("suggestionLink").innerText=t.suggestBtn;
+ document.getElementById("donateBtn").innerText=t.donate;
+ document.getElementById("donateText").innerText=t.donateText;
+ document.getElementById("copyPix").innerText=t.copy;
+ document.getElementById("doneDonate").innerText=t.done;
+ document.getElementById("thanksText").innerText=t.thanks;
+}
+
+document.getElementById("langBtn").onclick=()=>{
+ const box=document.getElementById("langBox");
+ box.style.display=box.style.display==='block'?'none':'block';
+};
+
+// botones
+suggestionBtn.onclick=()=> suggestionBox.style.display = suggestionBox.style.display==='block'?'none':'block';
+donateBtn.onclick=()=> donateBox.style.display = donateBox.style.display==='block'?'none':'block';
+copyPix.onclick=()=>{navigator.clipboard.writeText(pixCode.value);alert('PIX copiado');};
+doneDonate.onclick=()=>{donateBox.style.display='none';thankYouScreen.style.display='block';};
 
 </script>
 
